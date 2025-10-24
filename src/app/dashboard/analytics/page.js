@@ -36,7 +36,7 @@ export default function AnalyticsPage() {
       setError(null);
       
       // Fetch subscription data to calculate revenue and refunds
-      const response = await fetch('http://localhost:3000/users', {
+      const response = await fetch('https://dashboard.bettrfitness.com/users', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

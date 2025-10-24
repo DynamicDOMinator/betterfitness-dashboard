@@ -28,7 +28,7 @@ export default function DashboardPage() {
   const fetchDashboardData = async () => {
     try {
       // Fetch contacts
-      const contactsResponse = await fetch('http://localhost:3000/contact');
+      const contactsResponse = await fetch('https://dashboard.bettrfitness.com/contact');
       
       // Check if response is JSON
       const contactsContentType = contactsResponse.headers.get('content-type');
@@ -43,7 +43,7 @@ export default function DashboardPage() {
       const contactsData = contactsResult.success ? contactsResult.data : [];
       
       // Fetch subscriptions (users)
-      const subscriptionsResponse = await fetch('http://localhost:3000/users');
+      const subscriptionsResponse = await fetch('https://dashboard.bettrfitness.com/users');
       
       // Check if response is JSON
       const subscriptionsContentType = subscriptionsResponse.headers.get('content-type');
@@ -96,7 +96,7 @@ export default function DashboardPage() {
 
   const fetchChartData = async () => {
     try {
-      const response = await fetch('http://localhost:3000/admin/charts', {
+      const response = await fetch('https://dashboard.bettrfitness.com/admin/charts', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -324,7 +324,7 @@ export default function DashboardPage() {
               Dashboard
             </h1>
             <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">
-              Welcome back! Here's what's happening with your fitness platform.
+              Welcome back! Here&apos;s what&apos;s happening with your fitness platform.
             </p>
           </div>
           <div className="mt-4 sm:mt-0">
@@ -384,7 +384,7 @@ export default function DashboardPage() {
             <div className="relative">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wide">Total Revenue</p>
+                  <p className="text-sm font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wide">net revenue </p>
                   <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
                     {loading ? (
                       <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 w-20 rounded"></div>

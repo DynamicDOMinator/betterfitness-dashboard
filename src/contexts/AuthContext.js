@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await axios.post('http://localhost:3000/admin/login', {
+      const response = await axios.post('https://dashboard.bettrfitness.com/admin/login', {
         username,
         password
       });

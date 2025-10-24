@@ -37,7 +37,7 @@ export default function SettingsPage() {
 
     try {
       const response = await axios.put(
-        'http://localhost:3000/admin/change-username',
+        'https://dashboard.bettrfitness.com/admin/change-username',
         {
           newUsername: usernameForm.newUsername,
           currentPassword: usernameForm.currentPassword
@@ -77,7 +77,7 @@ export default function SettingsPage() {
 
     try {
       const response = await axios.put(
-        'http://localhost:3000/admin/change-password',
+        'https://dashboard.bettrfitness.com/admin/change-password',
         {
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword,

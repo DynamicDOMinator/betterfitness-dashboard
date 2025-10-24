@@ -27,7 +27,7 @@ export default function ContactsPage() {
 
   const fetchContacts = async () => {
     try {
-      const response = await fetch('http://localhost:3000/contact');
+      const response = await fetch('https://dashboard.bettrfitness.com/contact');
       
       // Check if response is JSON
       const contentType = response.headers.get('content-type');

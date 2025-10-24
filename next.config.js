@@ -8,6 +8,16 @@ const nextConfig = {
         port: '3000',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'dashboard.bettrfitness.com',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'dashboard.bettrfitness.com',
+        pathname: '/uploads/**',
+      },
     ],
   },
   // Allow CORS for development
