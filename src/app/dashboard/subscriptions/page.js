@@ -158,7 +158,8 @@ export default function SubscriptionsPage() {
         daysRemaining: subscription.daysRemaining,
         planHistory: subscription.planHistory || [],
         cancellationDetails: subscription.cancellationDetails || null, // Include cancellation details
-        nextPlan: subscription.nextPlan || null // Add nextPlan field for future API integration
+        nextPlan: subscription.nextPlan || null, // Add nextPlan field for future API integration
+        paymentDetails: subscription.paymentDetails || null // Add paymentDetails field from API response
       }));
       
       setSubscriptions(transformedData);
@@ -355,11 +356,12 @@ export default function SubscriptionsPage() {
       const cancelData = {
         cancellationReason: cancelFormData.cancellationReason,
         refundAmount: cancelFormData.refundAmount ? parseFloat(cancelFormData.refundAmount) : null,
-        refundStatus: cancelFormData.refundStatus || null
+        refundStatus: cancelFormData.refundStatus || null,
+        cancelledBy: "admin"
       };
 
-      const response = await fetch(`https://dashboard.bettrfitness.com/admin/users/${selectedSubscription.id}/cancel`, {
-        method: 'PUT',
+      const response = await fetch(`https://dashboard.bettrfitness.com/users/${selectedSubscription.id}/cancel`, {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -1299,6 +1301,136 @@ export default function SubscriptionsPage() {
                                     Unable to load next plan image
                                   </div>
                                 </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Payment Details Section */}
+                {selectedPaymentSubscription && selectedPaymentSubscription.paymentDetails && (
+                  <div className="mb-6">
+                    <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6 border border-green-200 dark:border-green-700">
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <DollarSign className="h-5 w-5 mr-2 text-green-600 dark:text-green-400" />
+                        Payment Details
+                      </h4>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Total Paid */}
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Paid</p>
+                              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                                ${selectedPaymentSubscription.paymentDetails.totalPaid || 0}
+                              </p>
+                            </div>
+                            <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full">
+                              <ArrowUp className="h-5 w-5 text-green-600 dark:text-green-400" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Refund Amount */}
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Refund Amount</p>
+                              <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                                ${selectedPaymentSubscription.paymentDetails.refundAmount || 0}
+                              </p>
+                            </div>
+                            <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-full">
+                              <ArrowDown className="h-5 w-5 text-red-600 dark:text-red-400" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Remaining Balance */}
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Remaining Balance</p>
+                              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                ${selectedPaymentSubscription.paymentDetails.remainingBalance || 0}
+                              </p>
+                            </div>
+                            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                              <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Payment Breakdown */}
+                      {selectedPaymentSubscription.paymentDetails.breakdown && (
+                        <div className="mt-6">
+                          <h5 className="text-md font-semibold text-gray-900 dark:text-white mb-3">Payment Breakdown</h5>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Current Plan</span>
+                                <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                                  ${selectedPaymentSubscription.paymentDetails.breakdown.currentPlan || 0}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-600">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Next Plan</span>
+                                <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                                  ${selectedPaymentSubscription.paymentDetails.breakdown.nextPlan || 0}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Cancellation Details */}
+                      {selectedPaymentSubscription.cancellationDetails && (
+                        <div className="mt-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-700">
+                          <h5 className="text-md font-semibold text-red-800 dark:text-red-300 mb-3 flex items-center">
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Cancellation Details
+                          </h5>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm text-red-700 dark:text-red-300">
+                                <span className="font-medium">Refund Amount:</span> ${selectedPaymentSubscription.cancellationDetails.refundAmount || 0}
+                              </p>
+                              <p className="text-sm text-red-700 dark:text-red-300">
+                                <span className="font-medium">Refund Status:</span> 
+                                <span className={`ml-1 px-2 py-1 rounded-full text-xs ${
+                                  selectedPaymentSubscription.cancellationDetails.refundStatus === 'processed' 
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                    : selectedPaymentSubscription.cancellationDetails.refundStatus === 'pending'
+                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                                }`}>
+                                  {selectedPaymentSubscription.cancellationDetails.refundStatus}
+                                </span>
+                              </p>
+                            </div>
+                            {selectedPaymentSubscription.cancellationDetails.cancelledAt && (
+                              <div>
+                                <p className="text-sm text-red-700 dark:text-red-300">
+                                  <span className="font-medium">Cancelled At:</span> {new Date(selectedPaymentSubscription.cancellationDetails.cancelledAt).toLocaleDateString()}
+                                </p>
+                                {selectedPaymentSubscription.cancellationDetails.cancelledBy && (
+                                  <p className="text-sm text-red-700 dark:text-red-300">
+                                    <span className="font-medium">Cancelled By:</span> {selectedPaymentSubscription.cancellationDetails.cancelledBy}
+                                  </p>
+                                )}
+                                {selectedPaymentSubscription.cancellationDetails.cancellationReason && (
+                                  <p className="text-sm text-red-700 dark:text-red-300">
+                                    <span className="font-medium">Reason:</span> {selectedPaymentSubscription.cancellationDetails.cancellationReason}
+                                  </p>
+                                )}
                               </div>
                             )}
                           </div>
